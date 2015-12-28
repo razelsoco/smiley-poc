@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -55,6 +56,10 @@ public class CustomTextView extends TextView {
     private Typeface selectTypeface(Context context, String fontName, int textStyle) {
         if (fontName.contentEquals(context.getString(R.string.font_carterone))) {
             return FontCache.get(context, "CarterOne.ttf");
+        }else if(fontName.contentEquals(context.getString(R.string.font_helvetica_bd))){
+            return FontCache.get(context, "HelveticaNeueLTComBdCn.ttf");
+        }else if(fontName.contentEquals(context.getString(R.string.font_helvetica_lt))){
+            return FontCache.get(context, "HelveticaNeueLTComLt.ttf");
         }else {
             // no matching font found
             // return null so Android just uses the standard font (Roboto)

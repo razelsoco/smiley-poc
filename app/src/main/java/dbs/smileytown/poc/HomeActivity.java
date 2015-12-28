@@ -1,6 +1,7 @@
 package dbs.smileytown.poc;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
@@ -24,6 +25,8 @@ import com.github.devnied.emvnfccard.model.EmvCard;
 import com.github.devnied.emvnfccard.model.EmvTransactionRecord;
 import com.github.devnied.emvnfccard.parser.EmvParser;
 import com.github.devnied.emvnfccard.utils.AtrUtils;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public class HomeActivity extends AppCompatActivity {
     private CoordinatorLayout root;
     private TransactionFragment mTransactionFragment;
 
+    private ProgressDialog mDialog;
+
 
 
     @Override
@@ -77,6 +82,11 @@ public class HomeActivity extends AppCompatActivity {
 
         mTimer  = new InactivityTimer(10000,1000);
         Log.d(HomeActivity.class.getName(), "ST oncreate");
+
+        // Read card on launch
+        if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
+            onNewIntent(getIntent());
+        }
     }
 
     /*
@@ -108,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+
 
         mNfcUtils.enableForegroundDispatch();
         if(!NFCUtils.isNFCEnabled(this)){
@@ -132,6 +142,8 @@ public class HomeActivity extends AppCompatActivity {
             alertbox.setCancelable(false);
             alertbox.show();
         }
+
+        super.onResume();
 
     }
 
@@ -157,10 +169,24 @@ public class HomeActivity extends AppCompatActivity {
     private void readCard(final Tag mTag){
         if (mTag != null) {
 
-            new SimpleTask(HomeActivity.this) {
+            new SimpleTask() {
 
                 IsoDep mtagComm;
                 boolean exception;
+                private EmvCard mCard;
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                    // Show dialog
+                    if (mDialog == null) {
+                        mDialog = ProgressDialog.show(HomeActivity.this, "Reading in progress..",
+                                "Please do not remove or move card during reading.", true, false);
+                    } else {
+                        mDialog.show();
+                    }
+                }
 
                 @Override
                 public void doInBackground() {
@@ -168,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
                     mtagComm = IsoDep.get(mTag);
                     if (mtagComm == null) {
                         //Toast.makeText(HomeActivity.this, "Error reading card!", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(root, "Error reading card!", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(root, "Please do not move card, try again!", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -181,36 +207,41 @@ public class HomeActivity extends AppCompatActivity {
                         mProvider.setTagCom(mtagComm);
 
                         EmvParser parser = new EmvParser(mProvider, true);
-                        mReadCard = parser.readEmvCard();
-                        if (mReadCard != null) {
-                            mReadCard.setAtrDescription(extractAtsDescription(lastAts));
+                        mCard = parser.readEmvCard();
+                        if (mCard != null) {
+                            mCard.setAtrDescription(extractAtsDescription(lastAts));
                         }
 
                     } catch (IOException e) {
                         e.printStackTrace();
                         exception = true;
+                    } finally {
+                        IOUtils.closeQuietly(mtagComm);
                     }
                 }
 
                 @Override
                 protected void onPostExecute(Object result) {
                     super.onPostExecute(result);
-                    if (exception) {
-                        //Toast.makeText(HomeActivity.this, "Error reading card!", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(root, "Please do not move card. Try again.", Snackbar.LENGTH_SHORT).show();
-                        return;
+
+                    if (mDialog != null) {
+                        mDialog.cancel();
                     }
 
+                    if (!exception) {
 
-                    if (mReadCard != null) {
-                        if (!TextUtils.isEmpty(mReadCard.getCardNumber())) {
-                            Snackbar.make(root, "Success", Snackbar.LENGTH_SHORT).show();
-                        } else if (mReadCard.isNfcLocked()) {
-                            Snackbar.make(root, "NFC is locked on your card", Snackbar.LENGTH_SHORT).show();
-                            mReadCard = null;
+                        if (mCard != null) {
+                            if (!TextUtils.isEmpty(mCard.getCardNumber())) {
+                                Snackbar.make(root, "Success", Snackbar.LENGTH_SHORT).show();
+                                mReadCard = mCard;
+                            } else if (mCard.isNfcLocked()) {
+                                Snackbar.make(root, "NFC is locked on your card", Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Snackbar.make(root, "Unknown card", Snackbar.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Snackbar.make(root, "Unknown EMV card", Snackbar.LENGTH_SHORT).show();
+                    }else{
+                        Snackbar.make(root, "Please do not move card. Try again.", Snackbar.LENGTH_SHORT).show();
                     }
 
                     showContent();

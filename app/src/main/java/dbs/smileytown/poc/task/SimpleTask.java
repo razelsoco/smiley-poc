@@ -3,46 +3,30 @@ package dbs.smileytown.poc.task;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 /**
  * Created by razelsoco on 17/12/15.
  */
 public abstract class SimpleTask extends AsyncTask<Void, Void, Object> {
 
-    private ProgressDialog pd;
-    private Context c;
 
-    public SimpleTask(Context c) {
-        this.c = c;
-    }
 
     @Override
-    protected Object doInBackground(Void... params) {
-        Object result=null;
+    protected Object doInBackground(final Void... params) {
+
+        Object result = null;
+
         try {
             doInBackground();
-        }catch (Exception e){
+        } catch (Exception e) {
             result = e;
+            Log.e(SimpleTask.class.getName(), e.getMessage(), e);
         }
+
         return result;
     }
 
-    @Override
-    protected void onPostExecute(Object result) {
-        super.onPostExecute(result);
-        pd.dismiss();
-    }
+    protected abstract void doInBackground();
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        if (pd == null) {
-            pd = new ProgressDialog(c);
-            pd.setMessage("Reading card...");
-            pd.setCancelable(false);
-        }
-        pd.show();
-    }
-
-    public abstract void doInBackground();
 }

@@ -1,5 +1,6 @@
 package dbs.smileytown.poc.adapter;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -55,7 +56,7 @@ public class TransactionAdapter extends BaseAdapter {
 
         ViewHolder vh = (ViewHolder) convertView.getTag();
 
-        SimpleDateFormat format = new SimpleDateFormat("dd MM yyyy", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         vh.tvDate.setText(format.format(record.getDate()));
 
         /*
@@ -68,6 +69,11 @@ public class TransactionAdapter extends BaseAdapter {
 
         float amount = (float)record.getAmount().longValue() / 100;
         vh.tvAmount.setText(String.format("$%.2f",amount));
+
+        if(position % 2 > 0){
+            convertView.setBackgroundResource(R.drawable.bg_transaction_item);
+        }else
+            convertView.setBackgroundColor(Color.WHITE);
 
         return convertView;
     }

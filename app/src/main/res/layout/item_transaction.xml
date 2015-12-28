@@ -3,23 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="15dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
     android:background="@drawable/bg_transaction_item">
 
     <dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_weight="7"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
-        app:font="@string/font_carterone"/>
+        android:textSize="@dimen/trans_item_title_size"
+        app:font="@string/font_helvetica_lt"/>
 
     <dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_amount"
         android:layout_width="wrap_content"
         android:layout_weight="3"
         android:layout_height="wrap_content"
-        android:textSize="13sp"
+        android:textSize="@dimen/trans_item_value_size"
         android:gravity="right"
         android:textColor="@color/color_red"
-        app:font="@string/font_carterone"/>
+        android:textStyle="bold"
+        app:font="@string/font_helvetica_lt"/>
 
 </LinearLayout>

@@ -15,9 +15,7 @@
         android:visibility="gone"/>
     <ListView android:id="@+id/lv_transactions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="15dp"/>
+        android:layout_height="match_parent"/>
 
 
 </RelativeLayout>

@@ -7,6 +7,6 @@
     <color name="color_red">#ea6045</color>
     <color name="color_darkblue">#3f5666</color>
 
-    <color name="bg_transaction">#fff4eb</color>
-    <color name="bg_transaction_item">#f2e5da</color>
+    <color name="bg_transaction">#ffffff</color>
+    <color name="bg_transaction_item">#f0f6f8</color>
 </resources>

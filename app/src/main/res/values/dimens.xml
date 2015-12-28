@@ -3,4 +3,18 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="transaction_panel_margintop">30dp</dimen>
+    <dimen name="transaction_panel_marginleft">10dp</dimen>
+    <dimen name="transaction_corner_radius">10dp</dimen>
+
+    <dimen name="transaction_title_margintop">15dp</dimen>
+    <dimen name="transaction_title_size">20sp</dimen>
+
+    <dimen name="balance_title_size">15sp</dimen>
+    <dimen name="balance_value_size">20sp</dimen>
+
+    <dimen name="trans_item_title_size">13sp</dimen>
+    <dimen name="trans_item_value_size">15sp</dimen>
 </resources>
