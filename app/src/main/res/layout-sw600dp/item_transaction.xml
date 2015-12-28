@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="15dp"
+    android:background="@drawable/bg_transaction_item">
+
+    <dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_weight="7"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        app:font="@string/font_carterone"/>
+
+    <dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_amount"
+        android:layout_width="wrap_content"
+        android:layout_weight="3"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:gravity="right"
+        android:textColor="@color/color_red"
+        app:font="@string/font_carterone"/>
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="color_green">#3ab80e</color>
+    <color name="color_red">#ea6045</color>
+    <color name="color_darkblue">#3f5666</color>
+
+    <color name="bg_transaction">#fff4eb</color>
+    <color name="bg_transaction_item">#f2e5da</color>
+</resources>
