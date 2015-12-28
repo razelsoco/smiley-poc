@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -43,7 +42,8 @@ import fr.devnied.bitlib.BytesUtils;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final float INITIAL_BALANCE = 1000.00f;
+    private static final float INITIAL_BALANCE = 2.00f;
+    private static final int MAX_TRANSACTIONS_TO_DISPLAY = 10;
 
     /**
      * IsoDep provider
@@ -62,6 +62,11 @@ public class HomeActivity extends AppCompatActivity {
     private TransactionFragment mTransactionFragment;
 
     private ProgressDialog mDialog;
+    private TextView tvErrorMsg;
+    private String mErrorMsg;
+
+    private List<EmvTransactionRecord> mTransactionRecordsToday = new ArrayList<EmvTransactionRecord>();
+    private Date dateToday = new Date();
 
 
 
@@ -75,6 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         layoutCardDetail = findViewById(R.id.layout_card_detail);
         layoutTapCard = findViewById(R.id.layout_tap_card);
         tvBalance = (TextView) findViewById(R.id.tv_balance);
+        tvErrorMsg = (TextView) findViewById(R.id.tv_error_message);
 
         mTransactionFragment = TransactionFragment.newInstance(mTransactionRecordsToday);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -88,33 +94,6 @@ public class HomeActivity extends AppCompatActivity {
             onNewIntent(getIntent());
         }
     }
-
-    /*
-    private void nextPage() {
-        int nextPage = vpTransactions.getCurrentItem()+1;
-        vpTransactions.setCurrentItem(nextPage);
-        if(nextPage == (mPagerAdapter.getCount() - 1))
-            btnNext.setEnabled(false);
-
-        if(nextPage == 1)
-            btnPrev.setEnabled(true);
-
-
-        tvCurrentPage.setText(++nextPage+"/"+mPagerAdapter.getCount());
-
-    }
-
-    private void prevPage() {
-        int prevPage = vpTransactions.getCurrentItem()-1;
-        vpTransactions.setCurrentItem(prevPage);
-        if(prevPage == 0)
-            btnPrev.setEnabled(false);
-
-        if(prevPage == 0)
-            btnNext.setEnabled(true);
-
-        tvCurrentPage.setText(++prevPage+"/"+mPagerAdapter.getCount());
-    } */
 
     @Override
     protected void onResume() {
@@ -178,7 +157,7 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-
+                    mErrorMsg = null;
                     // Show dialog
                     if (mDialog == null) {
                         mDialog = ProgressDialog.show(HomeActivity.this, "Reading in progress..",
@@ -194,16 +173,20 @@ public class HomeActivity extends AppCompatActivity {
                     mtagComm = IsoDep.get(mTag);
                     if (mtagComm == null) {
                         //Toast.makeText(HomeActivity.this, "Error reading card!", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(root, "Please do not move card, try again!", Snackbar.LENGTH_SHORT).show();
+                        //Snackbar.make(root, "Please do not move card, try again!", Snackbar.LENGTH_SHORT).show();
+                        mErrorMsg = "Please do not move card,\ntry again!";
                         return;
                     }
 
                     exception = false;
-                    mReadCard = null;
 
                     try {
+                        mReadCard = null;
+
+                        //open connection
                         mtagComm.connect();
                         lastAts = getAts(mtagComm);
+
                         mProvider.setTagCom(mtagComm);
 
                         EmvParser parser = new EmvParser(mProvider, true);
@@ -213,7 +196,6 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
                     } catch (IOException e) {
-                        e.printStackTrace();
                         exception = true;
                     } finally {
                         IOUtils.closeQuietly(mtagComm);
@@ -232,16 +214,19 @@ public class HomeActivity extends AppCompatActivity {
 
                         if (mCard != null) {
                             if (!TextUtils.isEmpty(mCard.getCardNumber())) {
-                                Snackbar.make(root, "Success", Snackbar.LENGTH_SHORT).show();
+                                //Snackbar.make(root, "Success", Snackbar.LENGTH_SHORT).show();
                                 mReadCard = mCard;
                             } else if (mCard.isNfcLocked()) {
-                                Snackbar.make(root, "NFC is locked on your card", Snackbar.LENGTH_SHORT).show();
+                                //Snackbar.make(root, "NFC is locked on your card", Snackbar.LENGTH_SHORT).show();
+                                mErrorMsg = "NFC is locked on your card";
                             }
                         } else {
-                            Snackbar.make(root, "Unknown card", Snackbar.LENGTH_SHORT).show();
+                            //Snackbar.make(root, "Unknown card", Snackbar.LENGTH_SHORT).show();
+                            mErrorMsg = "Unknown card";
                         }
                     }else{
-                        Snackbar.make(root, "Please do not move card. Try again.", Snackbar.LENGTH_SHORT).show();
+                        //Snackbar.make(root, "Please do not move card. Try again.", Snackbar.LENGTH_SHORT).show();
+                        mErrorMsg = "Please do not move card,\ntry again!";
                     }
 
                     showContent();
@@ -283,60 +268,54 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showContent() {
-        layoutTapCard.setVisibility(View.INVISIBLE);
+
         mTransactionRecordsToday.clear();
 
-
         if(mReadCard != null) {
+            layoutTapCard.setVisibility(View.INVISIBLE);
+            tvErrorMsg.setVisibility(View.GONE);
             //for testing
-            if (mReadCard.getListTransactions() != null)
-                mTransactionRecordsToday = mReadCard.getListTransactions();
+            //if (mReadCard.getListTransactions() != null)
+            //    mTransactionRecordsToday = mReadCard.getListTransactions();
 
             //filter records today
-            //setTodaysTransactions();
-            Log.d(HomeActivity.class.getName(), "ST mTransactionRecordsToday after filter = " + mTransactionRecordsToday.size());
+            setTodaysTransactions();
+
+            float balance = INITIAL_BALANCE - getTotalTransactionAmount(mTransactionRecordsToday);
+            tvBalance.setText(String.format("$%.2f", balance));
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTransactionFragment.refreshTransactions(mTransactionRecordsToday);
+                }
+            });
+
+
+        }else{
+            layoutTapCard.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(mErrorMsg)) {
+                tvErrorMsg.setText(mErrorMsg);
+                tvErrorMsg.setVisibility(View.VISIBLE);
+            }
         }
-
-        mTransactionFragment.refreshTransactions(mTransactionRecordsToday);
-
-        float balance = INITIAL_BALANCE - getTotalTransactionAmount(mTransactionRecordsToday);
-        tvBalance.setText(String.format("$%.2f", balance));
-
+        mTimer.cancel();
         mTimer.start();
-
-//        if(mPagerAdapter.getCount() <= 1 ) {
-//            btnNext.setEnabled(false);
-//            btnPrev.setEnabled(false);
-//            if(mPagerAdapter.getCount() == 0)
-//                tvCurrentPage.setVisibility(View.INVISIBLE);
-//            else {
-//                tvCurrentPage.setText("1/" + mPagerAdapter.getCount());
-//                tvCurrentPage.setVisibility(View.VISIBLE);
-//            }
-//        }else{
-//            btnNext.setEnabled(true);
-//            btnPrev.setEnabled(false);
-//            tvCurrentPage.setText("1/"+mPagerAdapter.getCount());
-//            tvCurrentPage.setVisibility(View.VISIBLE);
-//        }
-
     }
-
-    List<EmvTransactionRecord> mTransactionRecordsToday = new ArrayList<EmvTransactionRecord>();
-    Date dateToday = new Date();
 
     private void setTodaysTransactions(){
         dateToday.setTime(System.currentTimeMillis());
 
-        Log.d(HomeActivity.class.getName(), "ST card transactions = " + mReadCard.getListTransactions());
         if(mReadCard.getListTransactions() != null && mReadCard.getListTransactions().size() > 0){
-            this.mTransactionRecordsToday.clear();
             for(int i =0; i < mReadCard.getListTransactions().size(); i++){
                 EmvTransactionRecord transactionRecord = mReadCard.getListTransactions().get(i);
 
                 if (isDateToday(transactionRecord.getDate())) {
                     this.mTransactionRecordsToday.add(transactionRecord);
                 }
+
+                if(mTransactionRecordsToday.size() == MAX_TRANSACTIONS_TO_DISPLAY)
+                    break;
             }
         }
 
@@ -347,8 +326,8 @@ public class HomeActivity extends AppCompatActivity {
         Calendar calRecord = Calendar.getInstance();
         calToday.setTime(dateToday);
         calRecord.setTime(recordDate);
-        Log.d(HomeActivity.class.getName(),"ST Year : today = "+calToday.get(Calendar.YEAR) +" transaction = "+calRecord.get(Calendar.YEAR));
-        Log.d(HomeActivity.class.getName(),"ST Day of Year : today = "+calToday.get(Calendar.DAY_OF_YEAR) +" transaction = "+calRecord.get(Calendar.DAY_OF_YEAR));
+        //Log.d(HomeActivity.class.getName(),"ST Year : today = "+calToday.get(Calendar.YEAR) +" transaction = "+calRecord.get(Calendar.YEAR));
+        //Log.d(HomeActivity.class.getName(),"ST Day of Year : today = "+calToday.get(Calendar.DAY_OF_YEAR) +" transaction = "+calRecord.get(Calendar.DAY_OF_YEAR));
         return (calToday.get(Calendar.YEAR) == calRecord.get(Calendar.YEAR))
                 && (calToday.get(Calendar.DAY_OF_YEAR)==calRecord.get(Calendar.DAY_OF_YEAR));
 
@@ -374,8 +353,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
-        mTimer.cancel();
-        mTimer.start();
+        if(mTimer!= null) {
+            mTimer.cancel();
+            mTimer.start();
+        }
     }
 
     public class InactivityTimer extends CountDownTimer {
@@ -396,7 +377,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void resetUI(){
-        //layoutCardDetail.setVisibility(View.INVISIBLE);
         layoutTapCard.setVisibility(View.VISIBLE);
+        tvErrorMsg.setVisibility(View.GONE);
     }
 }

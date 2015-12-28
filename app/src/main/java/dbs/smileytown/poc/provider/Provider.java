@@ -5,6 +5,8 @@ import android.nfc.tech.IsoDep;
 import com.github.devnied.emvnfccard.exception.CommunicationException;
 import com.github.devnied.emvnfccard.parser.IProvider;
 
+import java.io.IOException;
+
 /**
  * Created by razelsoco on 16/12/15.
  */
@@ -16,8 +18,8 @@ public class Provider implements IProvider {
         byte[] response=null;
         try{
             response = mTagCom.transceive(pCommand);
-        }catch(Exception e){
-
+        }catch(IOException e){
+            throw new CommunicationException(e.getMessage());
         }
         return response;
     }

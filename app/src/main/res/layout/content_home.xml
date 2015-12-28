@@ -50,7 +50,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="20dp">
+                android:layout_margin="20dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
 
                 <dbs.smileytown.poc.view.CustomTextView
                     android:layout_width="0dp"
@@ -80,4 +82,19 @@
     android:layout_gravity="center"
     android:src="@drawable/tap_card"
         android:scaleType="fitXY"/>
+
+    <dbs.smileytown.poc.view.CustomTextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/error_message_text_size"
+        app:font="@string/font_helvetica_bd"
+        android:textColor="@color/color_red"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/error_message_margintop"
+        android:layout_marginLeft="@dimen/error_message_marginleft"
+        android:layout_marginRight="@dimen/error_message_marginleft"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        />
 </FrameLayout>

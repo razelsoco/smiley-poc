@@ -20,6 +20,7 @@ import dbs.smileytown.poc.R;
  */
 public class TransactionAdapter extends BaseAdapter {
     private List<EmvTransactionRecord> mTransactionRecord;
+    private static final String transactionPrefix="Transaction ";
 
     public TransactionAdapter(List<EmvTransactionRecord> mTransactionRecord) {
         this.mTransactionRecord = mTransactionRecord;
@@ -56,8 +57,9 @@ public class TransactionAdapter extends BaseAdapter {
 
         ViewHolder vh = (ViewHolder) convertView.getTag();
 
-        SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        vh.tvDate.setText(format.format(record.getDate()));
+        //SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        //vh.tvDate.setText(format.format(record.getDate()));
+        vh.tvDate.setText(transactionPrefix+(position+1));
 
         /*
         String amount;
@@ -79,7 +81,8 @@ public class TransactionAdapter extends BaseAdapter {
     }
 
     public void setTransactions(List<EmvTransactionRecord> transactions) {
-        this.mTransactionRecord = transactions;
+        this.mTransactionRecord.clear();
+        this.mTransactionRecord.addAll(transactions);
     }
 
     public class ViewHolder{

@@ -9,6 +9,11 @@
     <dimen name="balance_title_size">35sp</dimen>
     <dimen name="balance_value_size">50sp</dimen>
 
-    <dimen name="trans_item_title_size">26sp</dimen>
-    <dimen name="trans_item_value_size">30sp</dimen>
+    <dimen name="trans_item_title_size">30sp</dimen>
+    <dimen name="trans_item_value_size">35sp</dimen>
+    <dimen name="trans_item_paddingleft">50dp</dimen>
+
+    <dimen name="error_message_text_size">50sp</dimen>
+    <dimen name="error_message_margintop">100dp</dimen>
+    <dimen name="error_message_marginleft">60dp</dimen>
 </resources>

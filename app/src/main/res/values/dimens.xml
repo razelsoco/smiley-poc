@@ -17,4 +17,10 @@
 
     <dimen name="trans_item_title_size">13sp</dimen>
     <dimen name="trans_item_value_size">15sp</dimen>
+    <dimen name="trans_item_paddingleft">30dp</dimen>
+
+    <dimen name="error_message_text_size">30sp</dimen>
+    <dimen name="error_message_margintop">50dp</dimen>
+    <dimen name="error_message_marginleft">30dp</dimen>
+
 </resources>
