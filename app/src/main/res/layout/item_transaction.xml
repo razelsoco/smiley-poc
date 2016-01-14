@@ -9,21 +9,21 @@
     android:paddingRight="@dimen/trans_item_paddingleft"
     android:background="@drawable/bg_transaction_item">
 
-    <dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_date"
-        android:layout_width="wrap_content"
-        android:layout_weight="7"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/trans_item_title_size"
-        app:font="@string/font_helvetica_lt"/>
+    <!--<dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_date"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_weight="7"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/trans_item_title_size"-->
+        <!--app:font="@string/font_helvetica_lt"/>-->
 
     <dbs.smileytown.poc.view.CustomTextView android:id="@+id/tv_amount"
-        android:layout_width="wrap_content"
-        android:layout_weight="3"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:textSize="@dimen/trans_item_value_size"
-        android:gravity="right"
-        android:textColor="@color/color_red"
+        android:gravity="center"
+        android:textColor="@color/color_green"
         android:textStyle="bold"
-        app:font="@string/font_helvetica_lt"/>
+        android:layout_gravity="center"
+        app:font="@string/font_raleway_bd"/>
 
 </LinearLayout>

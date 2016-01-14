@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
@@ -42,7 +44,7 @@ import fr.devnied.bitlib.BytesUtils;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final float INITIAL_BALANCE = 2.00f;
+    private static final float INITIAL_BALANCE = 5.00f;
     private static final int MAX_TRANSACTIONS_TO_DISPLAY = 10;
 
     /**
@@ -53,20 +55,23 @@ public class HomeActivity extends AppCompatActivity {
 
     private EmvCard mReadCard;
     private NFCUtils mNfcUtils;
-    private View layoutCardDetail, layoutTapCard;
-    private TextView tvBalance;//, tvCurrentPage;
     private InactivityTimer mTimer;
-    //private ViewPager vpTransactions;
-    //private TransactionPagerAdapter mPagerAdapter;
-    private CoordinatorLayout root;
-    private TransactionFragment mTransactionFragment;
-
-    private ProgressDialog mDialog;
-    private TextView tvErrorMsg;
-    private String mErrorMsg;
-
     private List<EmvTransactionRecord> mTransactionRecordsToday = new ArrayList<EmvTransactionRecord>();
     private Date dateToday = new Date();
+
+    //homepage
+    private View layoutTapCard;
+    private ProgressDialog mDialog;
+    private TextView tvMessage;
+    private String mErrorMsg;
+
+    //transaction page
+    private TextView tvBalance;
+    private TransactionFragment mTransactionFragment;
+    private View btBack;
+
+
+    //private final MediaPlayer mMediaPlayer = new MediaPlayer();
 
 
 
@@ -76,17 +81,23 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mNfcUtils = new NFCUtils(this);
-        root = (CoordinatorLayout) findViewById(R.id.root);
-        layoutCardDetail = findViewById(R.id.layout_card_detail);
         layoutTapCard = findViewById(R.id.layout_tap_card);
         tvBalance = (TextView) findViewById(R.id.tv_balance);
-        tvErrorMsg = (TextView) findViewById(R.id.tv_error_message);
+        tvMessage = (TextView) findViewById(R.id.tv_error_message);
+        btBack = findViewById(R.id.bt_back);
+
+        btBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBack();
+            }
+        });
 
         mTransactionFragment = TransactionFragment.newInstance(mTransactionRecordsToday);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.detail_container, mTransactionFragment).commit();
 
-        mTimer  = new InactivityTimer(10000,1000);
+        mTimer  = new InactivityTimer(5000,1000);
         Log.d(HomeActivity.class.getName(), "ST oncreate");
 
         // Read card on launch
@@ -174,7 +185,7 @@ public class HomeActivity extends AppCompatActivity {
                     if (mtagComm == null) {
                         //Toast.makeText(HomeActivity.this, "Error reading card!", Toast.LENGTH_SHORT).show();
                         //Snackbar.make(root, "Please do not move card, try again!", Snackbar.LENGTH_SHORT).show();
-                        mErrorMsg = "Please do not move card,\ntry again!";
+                        mErrorMsg = getString(R.string.err_do_not_move);//"Please do not move card,\ntry again!";
                         return;
                     }
 
@@ -214,19 +225,15 @@ public class HomeActivity extends AppCompatActivity {
 
                         if (mCard != null) {
                             if (!TextUtils.isEmpty(mCard.getCardNumber())) {
-                                //Snackbar.make(root, "Success", Snackbar.LENGTH_SHORT).show();
                                 mReadCard = mCard;
                             } else if (mCard.isNfcLocked()) {
-                                //Snackbar.make(root, "NFC is locked on your card", Snackbar.LENGTH_SHORT).show();
-                                mErrorMsg = "NFC is locked on your card";
+                                mErrorMsg = getString(R.string.err_card_nonreadable);//"NFC is locked on your card";
                             }
                         } else {
-                            //Snackbar.make(root, "Unknown card", Snackbar.LENGTH_SHORT).show();
-                            mErrorMsg = "Unknown card";
+                            mErrorMsg = getString(R.string.err_card_nonreadable);//"Unknown card";
                         }
                     }else{
-                        //Snackbar.make(root, "Please do not move card. Try again.", Snackbar.LENGTH_SHORT).show();
-                        mErrorMsg = "Please do not move card,\ntry again!";
+                        mErrorMsg = getString(R.string.err_do_not_move);
                     }
 
                     showContent();
@@ -272,11 +279,13 @@ public class HomeActivity extends AppCompatActivity {
         mTransactionRecordsToday.clear();
 
         if(mReadCard != null) {
+            //beepSound();
             layoutTapCard.setVisibility(View.INVISIBLE);
-            tvErrorMsg.setVisibility(View.GONE);
             //for testing
-            //if (mReadCard.getListTransactions() != null)
-            //    mTransactionRecordsToday = mReadCard.getListTransactions();
+//            if (mReadCard.getListTransactions() != null){
+//               mTransactionRecordsToday = mReadCard.getListTransactions();
+//               mTransactionRecordsToday.addAll(mReadCard.getListTransactions());
+//            }
 
             //filter records today
             setTodaysTransactions();
@@ -295,8 +304,7 @@ public class HomeActivity extends AppCompatActivity {
         }else{
             layoutTapCard.setVisibility(View.VISIBLE);
             if(!TextUtils.isEmpty(mErrorMsg)) {
-                tvErrorMsg.setText(mErrorMsg);
-                tvErrorMsg.setVisibility(View.VISIBLE);
+                showErrorMessage(mErrorMsg);
             }
         }
         mTimer.cancel();
@@ -378,6 +386,44 @@ public class HomeActivity extends AppCompatActivity {
 
     private void resetUI(){
         layoutTapCard.setVisibility(View.VISIBLE);
-        tvErrorMsg.setVisibility(View.GONE);
+        showInstructionMessage();
+    }
+
+    private void showInstructionMessage(){
+        tvMessage.setText(getString(R.string.instructions));
+        tvMessage.setTextColor(getResources().getColor(R.color.posb_lightblue));
+    }
+
+    private void showErrorMessage(String errorMsg){
+        tvMessage.setText(errorMsg);
+        tvMessage.setTextColor(getResources().getColor(R.color.color_red));
+    }
+
+
+//    private void beepSound(){
+//        if(mMediaPlayer.isPlaying())
+//        {
+//            mMediaPlayer.stop();
+//        }
+//
+//        try {
+//            mMediaPlayer.reset();
+//            AssetFileDescriptor afd;
+//            afd = getAssets().openFd("beep.mp3");
+//            mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+//            mMediaPlayer.prepare();
+//            mMediaPlayer.start();
+//        } catch (IllegalStateException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+    private void onBack() {
+        mTimer.cancel();
+        resetUI();
     }
 }
+

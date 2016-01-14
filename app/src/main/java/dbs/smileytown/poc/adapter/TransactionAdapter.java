@@ -50,7 +50,7 @@ public class TransactionAdapter extends BaseAdapter {
         if(convertView == null) {
             convertView  = View.inflate(parent.getContext(), R.layout.item_transaction, null);
             ViewHolder vh = new ViewHolder();
-            vh.tvDate = (TextView) convertView.findViewById(R.id.tv_date);
+            //vh.tvDate = (TextView) convertView.findViewById(R.id.tv_date);
             vh.tvAmount = (TextView) convertView.findViewById(R.id.tv_amount);
             convertView.setTag(vh);
         }
@@ -59,7 +59,7 @@ public class TransactionAdapter extends BaseAdapter {
 
         //SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         //vh.tvDate.setText(format.format(record.getDate()));
-        vh.tvDate.setText(transactionPrefix+(position+1));
+        //vh.tvDate.setText(transactionPrefix+(position+1));
 
         /*
         String amount;
@@ -70,7 +70,7 @@ public class TransactionAdapter extends BaseAdapter {
         }*/
 
         float amount = (float)record.getAmount().longValue() / 100;
-        vh.tvAmount.setText(String.format("$%.2f",amount));
+        vh.tvAmount.setText("-"+String.format("$%.2f",amount));
 
         if(position % 2 > 0){
             convertView.setBackgroundResource(R.drawable.bg_transaction_item);
@@ -87,6 +87,6 @@ public class TransactionAdapter extends BaseAdapter {
 
     public class ViewHolder{
         public TextView tvAmount;
-        public TextView tvDate;
+        //public TextView tvDate;
     }
 }

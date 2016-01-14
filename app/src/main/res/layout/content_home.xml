@@ -9,73 +9,6 @@
     tools:context="rms.basicnfc.test.MainActivity"
     tools:showIn="@layout/activity_home">
 
-    <FrameLayout android:id="@+id/layout_card_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="15dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/transaction_panel_margintop"
-            android:layout_marginLeft="@dimen/transaction_panel_marginleft"
-            android:layout_marginRight="@dimen/transaction_panel_marginleft"
-            android:layout_marginBottom="@dimen/transaction_panel_margintop"
-            android:background="@drawable/bg_transaction"
-            >
-
-            <dbs.smileytown.poc.view.CustomTextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:gravity="center"
-                android:text="TRANSACTION DETAIL"
-                app:font="@string/font_helvetica_bd"
-                android:textSize="@dimen/transaction_title_size"
-                android:background="@drawable/bg_transaction_title_header"
-                android:textColor="#ffffff"
-                android:paddingTop="@dimen/transaction_title_margintop"
-                android:paddingBottom="@dimen/transaction_title_margintop"/>
-
-            <FrameLayout android:id="@+id/detail_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/layout_balance"
-                android:layout_below="@+id/title"/>
-
-            <LinearLayout
-                android:id="@+id/layout_balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="20dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <dbs.smileytown.poc.view.CustomTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="BALANCE"
-                    app:font="@string/font_helvetica_bd"
-                    android:textSize="@dimen/balance_title_size"/>
-
-                <dbs.smileytown.poc.view.CustomTextView
-                    android:id="@+id/tv_balance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:gravity="right"
-                    android:text="$45.00"
-                    app:font="@string/font_helvetica_bd"
-                    android:textSize="@dimen/balance_value_size"/>
-            </LinearLayout>
-
-        </RelativeLayout>
-    </FrameLayout>
-
     <ImageView android:id="@+id/layout_tap_card"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -88,9 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/error_message_text_size"
-        app:font="@string/font_helvetica_bd"
-        android:textColor="@color/color_red"
-        android:visibility="gone"
+        android:text="@string/instructions"
+        app:font="@string/font_raleway_extrabd"
+        android:textColor="@color/posb_lightblue"
         android:layout_marginTop="@dimen/error_message_margintop"
         android:layout_marginLeft="@dimen/error_message_marginleft"
         android:layout_marginRight="@dimen/error_message_marginleft"

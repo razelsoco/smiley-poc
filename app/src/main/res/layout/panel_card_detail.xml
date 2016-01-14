@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_card_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp">
+
+    <RelativeLayout
+        android:id="@+id/parent_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/transaction_panel_margintop"
+        android:layout_marginLeft="@dimen/transaction_panel_marginleft"
+        android:layout_marginRight="@dimen/transaction_panel_marginleft"
+        android:layout_marginTop="@dimen/transaction_panel_margintop"
+        android:background="@drawable/bg_transaction"
+        android:orientation="vertical">
+
+        <dbs.smileytown.poc.view.CustomTextView
+            android:id="@+id/title"
+            app:font="@string/font_raleway_bd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bg_transaction_title_header"
+            android:gravity="center"
+            android:paddingBottom="@dimen/transaction_title_margintop"
+            android:paddingTop="@dimen/transaction_title_margintop"
+            android:text="PAYMENTS MADE TODAY"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/transaction_title_size" />
+
+        <FrameLayout
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:background="#ffffff"/>
+
+        <LinearLayout
+            android:id="@+id/layout_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detail_container"
+            android:layout_margin="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <dbs.smileytown.poc.view.CustomTextView
+                app:font="@string/font_raleway_bd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".65"
+                android:text="Remaining Amount For Today"
+                android:textColor="@color/posb_lightblue"
+                android:textSize="@dimen/balance_title_size" />
+
+            <dbs.smileytown.poc.view.CustomTextView
+                android:id="@+id/tv_balance"
+                app:font="@string/font_raleway_bd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".35"
+                android:gravity="right"
+                android:text="$45.00"
+                android:textColor="@color/posb_lightblue"
+                android:textSize="@dimen/balance_value_size" />
+        </LinearLayout>
+
+        <dbs.smileytown.poc.view.CustomTextView
+            android:id="@+id/bt_back"
+            app:font="@string/font_raleway_bd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_back"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:paddingBottom="20dp"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:paddingTop="20dp"
+            android:text="BACK"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/balance_title_size" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

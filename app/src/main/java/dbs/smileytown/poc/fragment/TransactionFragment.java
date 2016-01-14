@@ -67,5 +67,4 @@ public class TransactionFragment extends Fragment {
         mAdapter.setTransactions(mTransactions);
         mAdapter.notifyDataSetChanged();
     }
-
 }

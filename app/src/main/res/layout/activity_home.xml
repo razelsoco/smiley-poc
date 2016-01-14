@@ -8,28 +8,35 @@
     android:fitsSystemWindows="true"
     tools:context="dbs.smileytown.poc.HomeActivity">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+    <include layout="@layout/panel_card_detail" />
 
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?attr/actionBarSize"-->
-            <!--android:background="?attr/colorPrimary"-->
-            <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
+    <FrameLayout
+        android:id="@+id/layout_tap_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!--</android.support.design.widget.AppBarLayout>-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/tap_card" />
 
-    <include layout="@layout/content_home" />
+        <dbs.smileytown.poc.view.CustomTextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/error_message_marginleft"
+            android:layout_marginRight="@dimen/error_message_marginleft"
+            android:layout_marginTop="@dimen/error_message_margintop"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/instructions"
+            android:textColor="@color/posb_lightblue"
+            android:textSize="@dimen/error_message_text_size"
+            app:font="@string/font_raleway_bd" />
+    </FrameLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:src="@android:drawable/ic_dialog_email" />-->
 
 </android.support.design.widget.CoordinatorLayout>
