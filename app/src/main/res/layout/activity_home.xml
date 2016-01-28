@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="dbs.smileytown.poc.HomeActivity">
+    tools:context="dbs.smileytown.poc.HomeActivity"
+    android:background="#ffffff">
 
-    <include layout="@layout/panel_card_detail" />
+    <include layout="@layout/panel_card_detail2" />
 
     <FrameLayout
         android:id="@+id/layout_tap_card"

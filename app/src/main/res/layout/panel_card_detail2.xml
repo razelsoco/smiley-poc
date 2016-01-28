@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_card_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/transaction_panel_margintop"
+    android:layout_marginLeft="@dimen/transaction_panel_marginleft"
+    android:layout_marginRight="@dimen/transaction_panel_marginleft"
+    android:layout_marginTop="@dimen/transaction_panel_margintop">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/parent_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_transaction"
+            android:padding="50dp"
+            android:orientation="vertical">
+
+
+            <dbs.smileytown.poc.view.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Remaining Amount For Today"
+                android:textColor="@color/posb_lightblue"
+                android:textSize="@dimen/balance_title_size"
+                app:font="@string/font_raleway_bd"
+                android:gravity="center"/>
+
+            <dbs.smileytown.poc.view.CustomTextView
+                android:id="@+id/tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="25 Jan 2016 10:30AM"
+                android:textColor="@color/posb_lightblue"
+                android:textSize="@dimen/balance_title_size"
+                app:font="@string/font_raleway_lt"
+                android:gravity="center"/>
+
+
+            <dbs.smileytown.poc.view.CustomTextView
+                android:id="@+id/tv_balance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="$45.00"
+                android:textColor="@color/posb_yellow"
+                android:textSize="@dimen/balance_value_size"
+                app:font="@string/font_raleway_bd"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="80dp"/>
+
+            <dbs.smileytown.poc.view.AspectRatioImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:src="@drawable/squirrel2"/>
+
+        </LinearLayout>
+
+        <dbs.smileytown.poc.view.CustomTextView
+            android:id="@+id/bt_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:background="@drawable/back_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="BACK"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/balance_title_size"
+            app:font="@string/font_raleway_bd"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+</RelativeLayout>

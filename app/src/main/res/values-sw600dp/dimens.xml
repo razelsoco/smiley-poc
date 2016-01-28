@@ -1,13 +1,14 @@
 <resources>
-    <dimen name="transaction_panel_margintop">40dp</dimen>
-    <dimen name="transaction_panel_marginleft">20dp</dimen>
+    <dimen name="transaction_panel_margintop">80dp</dimen>
+    <dimen name="transaction_panel_marginleft">60dp</dimen>
     <dimen name="transaction_corner_radius">20dp</dimen>
 
     <dimen name="transaction_title_margintop">30dp</dimen>
     <dimen name="transaction_title_size">40sp</dimen>
 
-    <dimen name="balance_title_size">30sp</dimen>
-    <dimen name="balance_value_size">47sp</dimen>
+    <dimen name="balance_title_size">38sp</dimen>
+    <dimen name="balance_date_size">28sp</dimen>
+    <dimen name="balance_value_size">100sp</dimen>
 
     <dimen name="trans_item_title_size">30sp</dimen>
     <dimen name="trans_item_value_size">35sp</dimen>

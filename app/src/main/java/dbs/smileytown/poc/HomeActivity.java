@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
@@ -13,8 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +26,7 @@ import com.github.devnied.emvnfccard.utils.AtrUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -38,13 +35,17 @@ import java.util.List;
 
 import dbs.smileytown.poc.fragment.TransactionFragment;
 import dbs.smileytown.poc.provider.Provider;
+import dbs.smileytown.poc.receiver.FileDownloader;
 import dbs.smileytown.poc.task.SimpleTask;
+import dbs.smileytown.poc.utils.BalanceData;
+import dbs.smileytown.poc.utils.ExcelParser;
 import dbs.smileytown.poc.utils.NFCUtils;
 import fr.devnied.bitlib.BytesUtils;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final float INITIAL_BALANCE = 5.00f;
+    private static final String INITIAL_BALANCE_STR = "$5.00";
     private static final int MAX_TRANSACTIONS_TO_DISPLAY = 10;
 
     /**
@@ -69,10 +70,11 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvBalance;
     private TransactionFragment mTransactionFragment;
     private View btBack;
+    private TextView tvUpdateDate;
 
 
     //private final MediaPlayer mMediaPlayer = new MediaPlayer();
-
+    ExcelParser mExcelFileParser;
 
 
     @Override
@@ -85,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         tvBalance = (TextView) findViewById(R.id.tv_balance);
         tvMessage = (TextView) findViewById(R.id.tv_error_message);
         btBack = findViewById(R.id.bt_back);
+        tvUpdateDate = (TextView) findViewById(R.id.tv_date);
 
         btBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,9 +96,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        mTransactionFragment = TransactionFragment.newInstance(mTransactionRecordsToday);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.detail_container, mTransactionFragment).commit();
+//        mTransactionFragment = TransactionFragment.newInstance(mTransactionRecordsToday);
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.add(R.id.detail_container, mTransactionFragment).commit();
 
         mTimer  = new InactivityTimer(5000,1000);
         Log.d(HomeActivity.class.getName(), "ST oncreate");
@@ -104,6 +107,13 @@ public class HomeActivity extends AppCompatActivity {
         if (getIntent().getAction() == NfcAdapter.ACTION_TECH_DISCOVERED) {
             onNewIntent(getIntent());
         }
+
+        //mExcelFileParser.parse(this);
+        mExcelFileParser = ExcelParser.getInstance();
+        //initDropbox();
+        getFile();
+        //AlarmScheduler.scheduleAlarmForFileDownload(this);
+
     }
 
     @Override
@@ -132,6 +142,7 @@ public class HomeActivity extends AppCompatActivity {
             alertbox.setCancelable(false);
             alertbox.show();
         }
+
 
         super.onResume();
 
@@ -278,28 +289,51 @@ public class HomeActivity extends AppCompatActivity {
 
         mTransactionRecordsToday.clear();
 
-        if(mReadCard != null) {
+
+        if(mReadCard != null && !TextUtils.isEmpty(mReadCard.getCardNumber())) {
             //beepSound();
-            layoutTapCard.setVisibility(View.INVISIBLE);
-            //for testing
+
+            String card = mReadCard.getCardNumber();
+            BalanceData data = mExcelFileParser.getBalanceDataMap().get(card.substring(card.length()-4, card.length()));
+            if(data != null) {
+                layoutTapCard.setVisibility(View.INVISIBLE);
+
+                //==========OLD CODE START==============
+
+////            for testing
 //            if (mReadCard.getListTransactions() != null){
 //               mTransactionRecordsToday = mReadCard.getListTransactions();
 //               mTransactionRecordsToday.addAll(mReadCard.getListTransactions());
 //            }
+//
+//
+//            //filter records today
+//            setTodaysTransactions();
+//
+//            float balance = INITIAL_BALANCE - getTotalTransactionAmount(mTransactionRecordsToday);
+//            tvBalance.setText(String.format("$%.2f", balance));
+//
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mTransactionFragment.refreshTransactions(mTransactionRecordsToday);
+//                }
+//            });
 
-            //filter records today
-            setTodaysTransactions();
+                //==========OLD CODE END==============
 
-            float balance = INITIAL_BALANCE - getTotalTransactionAmount(mTransactionRecordsToday);
-            tvBalance.setText(String.format("$%.2f", balance));
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mTransactionFragment.refreshTransactions(mTransactionRecordsToday);
+                //==========NEW CODE START================
+                //new code is reading balance from file
+                tvUpdateDate.setText(data.date);
+                tvBalance.setText(data.balance);
+                //==========NEW CODE END==================
+            }else{
+                mErrorMsg = getString(R.string.err_card_nonreadable);
+                layoutTapCard.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(mErrorMsg)) {
+                    showErrorMessage(mErrorMsg);
                 }
-            });
-
+            }
 
         }else{
             layoutTapCard.setVisibility(View.VISIBLE);
@@ -396,7 +430,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showErrorMessage(String errorMsg){
         tvMessage.setText(errorMsg);
-        tvMessage.setTextColor(getResources().getColor(R.color.color_red));
+        tvMessage.setTextColor(getResources().getColor(R.color.posb_grey));
     }
 
 
@@ -425,5 +459,52 @@ public class HomeActivity extends AppCompatActivity {
         mTimer.cancel();
         resetUI();
     }
+
+    private void getFile() {
+        if(FileDownloader.getFile(this).exists()){
+            Log.d("smiley", "Files exists.. parsing file...");
+            InputStream is = null;
+                mExcelFileParser.parse(this);
+
+
+        }else{
+            Log.d("smiley", "Files does not exists... wait after file download..");
+        }
+
+        FileDownloader.downloadFile(this);
+
+
+    }
+
+//    private void scheduleFileDownload(){
+//        Timer timer = new Timer();
+//
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                getFile();
+//            }
+//        };
+//
+//
+//        //get delay : current minute -> 30th minute or 0th minute
+//        int delay;
+//        Calendar c = Calendar.getInstance();
+//        int minute = c.get(Calendar.MINUTE);
+//
+//        if(minute > 0 && minute < 30 )
+//            delay = 30 - minute;
+//        else if(minute > 30 && minute < 59)
+//            delay = (59 - minute) + 1;
+//        else
+//            delay = 5;
+//
+//        delay = delay * 1000;
+//
+//
+//        //timer.schedule(task,delay,1000*60*30);
+//
+//    }
+
 }
 

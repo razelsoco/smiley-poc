@@ -5,9 +5,11 @@
     <string name="font_helvetica_lt">HelveticaNeueLTComBdCn</string>
     <string name="font_helvetica_bd">HelveticaNeueLTComBdCn</string>
     <string name="font_raleway_bd">RalewayBold</string>
+    <string name="font_raleway_lt">RalewayLight</string>
     <string name="font_raleway_extrabd">RalewayExtraBold</string>
     <string name="no_transactions">No transactions</string>
     <string name="instructions">To begin, tap your\nSmiley wearable band</string>
     <string name="err_do_not_move">Try again! Please tap and\nhold your Smiley wearable\nband for 3 seconds.</string>
     <string name="err_card_nonreadable">Error. Please tap the Smiley wearable band.</string>
+    <string name="err_card_not_found_in_file">We cannot detect your wearable band</string>
 </resources>

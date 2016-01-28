@@ -3,5 +3,5 @@
     <solid android:color="@color/posb_lightblue"
         />
 
-    <corners android:radius="@dimen/transaction_corner_radius" />
+    <corners android:radius="8dp" />
 </shape>

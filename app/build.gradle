@@ -1,37 +1,80 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    dexOptions {
+        preDexLibraries false
+        //incremental true
+        javaMaxHeapSize "4g"
+    }
+
+    afterEvaluate {
+        tasks.matching {
+            it.name.startsWith('dex')
+        }.each { dx ->
+            if (dx.additionalParameters == null) {
+                dx.additionalParameters = ['--multi-dex']
+            } else {
+                dx.additionalParameters += '--multi-dex'
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "dbs.smileytown.poc"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.2"
+        multiDexEnabled true
+    }
+    signingConfigs {
+        release {
+            storeFile file('smiley-poc.keystore')
+            storePassword '2359media'
+            keyAlias 'smiley-poc'
+            keyPassword '2359media'
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
     packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-
-    dependencies {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
-        testCompile 'junit:junit:4.12'
-        compile 'com.android.support:appcompat-v7:23.1.1'
-        compile 'com.android.support:design:23.1.1'
-        compile 'com.github.devnied.emvnfccard:library:2.1.1'
+    project.tasks.withType(com.android.build.gradle.tasks.Dex) {
+        additionalParameters=['--core-library'] // --core-library option needed for now, will fix it soon
     }
+
 }
 
 
+dependencies {
+    compile files('libs/poi-3.12-android.jar')
+    compile files('libs/poi-ooxml-schemas-3.12-20150511.jar')
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.github.devnied.emvnfccard:library:2.1.1'
+    compile 'com.android.support:multidex:1.0.1'
 
-
+    //Retrofit
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.squareup.okhttp:okhttp:2.7.0'
+}
