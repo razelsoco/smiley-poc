@@ -37,9 +37,10 @@
                 android:id="@+id/tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="25 Jan 2016 10:30AM"
                 android:textColor="@color/posb_lightblue"
-                android:textSize="@dimen/balance_title_size"
+                android:textSize="@dimen/balance_date_size"
                 app:font="@string/font_raleway_lt"
                 android:gravity="center"/>
 

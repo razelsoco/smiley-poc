@@ -31,7 +31,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.2"
+        versionName "1.3"
         multiDexEnabled true
     }
     signingConfigs {
@@ -71,10 +71,11 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.github.devnied.emvnfccard:library:2.1.1'
     compile 'com.android.support:multidex:1.0.1'
-
     //Retrofit
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.okhttp:okhttp:2.7.0'
+//    compile files('libs/android-logging-log4j-1.0.3.jar')
+//    compile files('libs/log4j-1.2.17.jar')
 }

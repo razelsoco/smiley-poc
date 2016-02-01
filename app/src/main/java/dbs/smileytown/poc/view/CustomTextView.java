@@ -61,11 +61,11 @@ public class CustomTextView extends TextView {
         }else if(fontName.contentEquals(context.getString(R.string.font_helvetica_lt))){
             return FontCache.get(context, "HelveticaNeueLTComLt.ttf");
         }else if(fontName.contentEquals(context.getString(R.string.font_raleway_bd))){
-            return FontCache.get(context, "RalewayBold.ttf");
+            return FontCache.get(context, "RalewayLiningFigBold.otf");
         }else if(fontName.contentEquals(context.getString(R.string.font_raleway_extrabd))){
-            return FontCache.get(context, "RalewayExtraBold.ttf");
+            return FontCache.get(context, "RalewayLiningFigExtraBold.otf");
         }else if(fontName.contentEquals(context.getString(R.string.font_raleway_lt))){
-            return FontCache.get(context, "RalewayLight.ttf");
+            return FontCache.get(context, "RalewayLiningFigLight.otf");
         }else {
             // no matching font found
             // return null so Android just uses the standard font (Roboto)

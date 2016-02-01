@@ -7,7 +7,7 @@
     <dimen name="transaction_title_size">40sp</dimen>
 
     <dimen name="balance_title_size">38sp</dimen>
-    <dimen name="balance_date_size">28sp</dimen>
+    <dimen name="balance_date_size">30sp</dimen>
     <dimen name="balance_value_size">100sp</dimen>
 
     <dimen name="trans_item_title_size">30sp</dimen>

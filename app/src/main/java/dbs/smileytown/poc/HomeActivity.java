@@ -324,7 +324,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 //==========NEW CODE START================
                 //new code is reading balance from file
-                tvUpdateDate.setText(data.date);
+                tvUpdateDate.setText("As at "+data.date);
                 tvBalance.setText(data.balance);
                 //==========NEW CODE END==================
             }else{
