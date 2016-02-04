@@ -74,7 +74,7 @@ public class FileDownloader extends BroadcastReceiver {
 						is = response.body().byteStream();
 						copyInputStreamToFile(context, is);
 						ExcelParser.getInstance().parse(context);
-
+						Log.d("smiley", "File download finish Data SIZE ==> " + ExcelParser.getInstance().getBalanceDataMap().size());
 						Log.d("smiley", "File download finish Data==> " + ExcelParser.getInstance().getBalanceDataMap());
 					} catch (IOException e) {
 						e.printStackTrace();

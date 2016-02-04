@@ -20,14 +20,27 @@ public class AlarmScheduler {
         int currMinute = cal.get(Calendar.MINUTE);
         int setMinute=0;
 
-        if(currMinute >=0 && currMinute <5)
-            setMinute = 5;
-        else if(currMinute >=5 && currMinute < 35)
-            setMinute = 35;
-        else if(currMinute >= 35 && currMinute <= 59) {
-            setMinute = 5;
-            cal.add(Calendar.HOUR, 1);
+
+        if(cal.get(Calendar.HOUR_OF_DAY) == 9 && currMinute <=25 ){
+            setMinute = currMinute + 5;
+        }else {
+
+            if(currMinute >=0 && currMinute <5){
+                setMinute = 5;
+            }else if(currMinute >=5 && currMinute < 35){
+                setMinute = 35;
+
+                if(cal.get(Calendar.HOUR_OF_DAY) == 15){
+                    setMinute = 0;
+                    cal.set(Calendar.HOUR_OF_DAY, 9);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                }
+            }else if(currMinute >= 35 && currMinute <= 59) {
+                setMinute = 5;
+                cal.add(Calendar.HOUR, 1);
+            }
         }
+
         cal.set(Calendar.MINUTE, setMinute);
 
         Intent i = new Intent(c, FileDownloader.class);
