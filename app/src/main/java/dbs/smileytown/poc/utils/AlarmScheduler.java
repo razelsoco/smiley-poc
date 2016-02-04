@@ -27,10 +27,15 @@ public class AlarmScheduler {
 
             if(currMinute >=0 && currMinute <5){
                 setMinute = 5;
+                if(cal.get(Calendar.HOUR_OF_DAY) >= 15){
+                    setMinute = 0;
+                    cal.set(Calendar.HOUR_OF_DAY, 9);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                }
             }else if(currMinute >=5 && currMinute < 35){
                 setMinute = 35;
 
-                if(cal.get(Calendar.HOUR_OF_DAY) == 15){
+                if(cal.get(Calendar.HOUR_OF_DAY) >= 15){
                     setMinute = 0;
                     cal.set(Calendar.HOUR_OF_DAY, 9);
                     cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -38,10 +43,16 @@ public class AlarmScheduler {
             }else if(currMinute >= 35 && currMinute <= 59) {
                 setMinute = 5;
                 cal.add(Calendar.HOUR, 1);
+                if(cal.get(Calendar.HOUR_OF_DAY) >= 15){
+                    setMinute = 0;
+                    cal.set(Calendar.HOUR_OF_DAY, 9);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                }
             }
         }
 
         cal.set(Calendar.MINUTE, setMinute);
+        cal.set(Calendar.SECOND, 0);
 
         Intent i = new Intent(c, FileDownloader.class);
 
@@ -49,6 +60,6 @@ public class AlarmScheduler {
 
         AlarmManager am = (AlarmManager)c.getSystemService(c.ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
-
+        FileLogger.getInstance().writeLogs("Schedule next alarm time => " + FileLogger.getCurrentDateTime(cal));
     }
 }

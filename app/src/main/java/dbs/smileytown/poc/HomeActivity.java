@@ -39,6 +39,7 @@ import dbs.smileytown.poc.receiver.FileDownloader;
 import dbs.smileytown.poc.task.SimpleTask;
 import dbs.smileytown.poc.utils.BalanceData;
 import dbs.smileytown.poc.utils.ExcelParser;
+import dbs.smileytown.poc.utils.FileLogger;
 import dbs.smileytown.poc.utils.NFCUtils;
 import fr.devnied.bitlib.BytesUtils;
 
@@ -75,6 +76,7 @@ public class HomeActivity extends AppCompatActivity {
 
     //private final MediaPlayer mMediaPlayer = new MediaPlayer();
     ExcelParser mExcelFileParser;
+    FileLogger mFileLogger;
 
 
     @Override
@@ -110,7 +112,9 @@ public class HomeActivity extends AppCompatActivity {
 
         //mExcelFileParser.parse(this);
         mExcelFileParser = ExcelParser.getInstance();
+        mFileLogger = FileLogger.getInstance();
         //initDropbox();
+        mFileLogger.writeLogs("App start");
         getFile();
         //AlarmScheduler.scheduleAlarmForFileDownload(this);
 
@@ -336,6 +340,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
         }else{
+            mFileLogger.writeLogs("READ ERROR : "+ mErrorMsg);
             layoutTapCard.setVisibility(View.VISIBLE);
             if(!TextUtils.isEmpty(mErrorMsg)) {
                 showErrorMessage(mErrorMsg);
@@ -462,13 +467,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void getFile() {
         if(FileDownloader.getFile(this).exists()){
-            Log.d("smiley", "Files exists.. parsing file...");
-            InputStream is = null;
-                mExcelFileParser.parse(this);
-
-
-        }else{
-            Log.d("smiley", "Files does not exists... wait after file download..");
+            //Log.d("smiley", "Data file exists.. parsing data from file...");
+            mFileLogger.writeLogs("Balance data file exists.. parsing balance data from file...");
+            mExcelFileParser.parse(this);
         }
 
         FileDownloader.downloadFile(this);

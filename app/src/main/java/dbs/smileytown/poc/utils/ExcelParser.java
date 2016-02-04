@@ -34,6 +34,7 @@ public class ExcelParser {
 
 
     public void parse(Context c) {
+        FileLogger.getInstance().writeLogs("Balance data file parsing start");
         try {
             mBalanceDataMap.clear();
             //InputStream is = c.getAssets().open("data.xlsx");
@@ -58,10 +59,15 @@ public class ExcelParser {
                 mBalanceDataMap.put(balanceData.cardNumber, balanceData);
             }
 
+            FileLogger.getInstance().writeLogs("Balance data file parsing finish SIZE => "+ mBalanceDataMap.size());
         } catch (IOException e) {
             e.printStackTrace();
+            FileLogger.getInstance().writeLogs("PARSE ERROR 1:"+ e.getMessage());
         } catch (InvalidFormatException e) {
             e.printStackTrace();
+            FileLogger.getInstance().writeLogs("PARSE ERROR 2:" + e.getMessage());
+        } catch (Exception e){
+            FileLogger.getInstance().writeLogs("PARSE ERROR 3:" + e.getMessage());
         }
     }
 
