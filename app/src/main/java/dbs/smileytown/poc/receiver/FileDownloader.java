@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
+import dbs.smileytown.poc.email.MailSenderAsyncTask;
 import dbs.smileytown.poc.network.ApiManager;
 import dbs.smileytown.poc.network.CallbackWithRetry;
 import dbs.smileytown.poc.utils.AlarmScheduler;
@@ -93,8 +95,15 @@ public class FileDownloader extends BroadcastReceiver {
 					//Log.d("smiley", "File download fail =====> " + response.message());
 					FileLogger.getInstance().writeLogs("ERROR downloading balance data file error : " + response.code() + " " + response.message());
 				}
+
+				sendLogsToEmail(context);
 			}
 
+			@Override
+			public void onFailure(Throwable t) {
+				super.onFailure(t);
+				sendLogsToEmail(context);
+			}
 		});
 
 		AlarmScheduler.scheduleAlarmForFileDownload(context);
@@ -118,6 +127,13 @@ public class FileDownloader extends BroadcastReceiver {
 			//}
 		}
 		return false;
+	}
+
+	public static void sendLogsToEmail(Context c){
+		Calendar cal = Calendar.getInstance();
+		if((cal.get(Calendar.HOUR_OF_DAY)==9 && cal.get(Calendar.MINUTE) <= 30)
+				|| cal.get(Calendar.HOUR_OF_DAY)== 15 )
+			new MailSenderAsyncTask(c).execute();
 	}
 
 }

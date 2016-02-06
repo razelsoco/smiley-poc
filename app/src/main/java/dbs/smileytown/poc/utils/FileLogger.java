@@ -1,6 +1,10 @@
 package dbs.smileytown.poc.utils;
 
+import android.content.Context;
 import android.os.Environment;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -53,6 +57,19 @@ public class FileLogger {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime());
     }
 
+    public File getFile() {
+        return file;
+    }
 
+    public static String getDeviceId(Context c){
+        String deviceId;
 
+        TelephonyManager mngr = (TelephonyManager)c.getSystemService(Context.TELEPHONY_SERVICE);
+        deviceId = mngr.getDeviceId();
+
+        if(TextUtils.isEmpty(deviceId))
+            deviceId = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        return deviceId;
+    }
 }

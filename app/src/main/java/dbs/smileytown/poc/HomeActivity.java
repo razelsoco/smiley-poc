@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.devnied.emvnfccard.model.EmvCard;
 import com.github.devnied.emvnfccard.model.EmvTransactionRecord;
@@ -33,6 +34,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import dbs.smileytown.poc.email.GMailSender;
+import dbs.smileytown.poc.email.MailSenderAsyncTask;
 import dbs.smileytown.poc.fragment.TransactionFragment;
 import dbs.smileytown.poc.provider.Provider;
 import dbs.smileytown.poc.receiver.FileDownloader;
@@ -97,7 +100,14 @@ public class HomeActivity extends AppCompatActivity {
                 onBack();
             }
         });
-
+//        tvMessage.setClickable(true);
+//        tvMessage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                new MailSenderAsyncTask(HomeActivity.this).execute();
+//            }
+//        });
 //        mTransactionFragment = TransactionFragment.newInstance(mTransactionRecordsToday);
 //        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        transaction.add(R.id.detail_container, mTransactionFragment).commit();
@@ -117,7 +127,7 @@ public class HomeActivity extends AppCompatActivity {
         mFileLogger.writeLogs("App start");
         getFile();
         //AlarmScheduler.scheduleAlarmForFileDownload(this);
-
+        //FileLogger.getInstance().getFile().delete();
     }
 
     @Override

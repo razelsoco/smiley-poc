@@ -1,5 +1,6 @@
 package dbs.smileytown.poc.network;
 
+import dbs.smileytown.poc.email.MailSenderAsyncTask;
 import dbs.smileytown.poc.utils.FileLogger;
 import retrofit.Call;
 import retrofit.Callback;

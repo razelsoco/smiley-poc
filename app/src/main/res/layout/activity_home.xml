@@ -37,6 +37,7 @@
             android:textColor="@color/posb_lightblue"
             android:textSize="@dimen/error_message_text_size"
             app:font="@string/font_raleway_bd" />
+
     </FrameLayout>
 
 
